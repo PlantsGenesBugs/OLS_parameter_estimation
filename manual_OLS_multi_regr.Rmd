@@ -25,4 +25,21 @@ london_housing <- london_housing %>%
          floorAreaSqM,
          livingRooms,
          saleEstimate_currentPrice
-         )
+  )
+
+# specify output variable
+y <- london_housing$saleEstimate_currentPrice
+
+# create feature matrix
+feature_matrix <- london_housing %>%
+  select(-saleEstimate_currentPrice) %>%
+  as.matrix()
+
+# because we will estimate parameters for a linear model of the form y = b0 + b1x1 + b2x2...
+# we have to add a column of values to column 1 of our design matrix, to represent a mock covariant
+# for the intercept parameter b0, so that the linear model becomes y = b0x0 + b1x1 + b2x2...
+# we will set x0 = 1 for all features
+
+
+
+
