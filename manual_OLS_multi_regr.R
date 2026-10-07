@@ -8,7 +8,9 @@ library(RKaggle)
 
 london_housing <- RKaggle::get_dataset("jakewright/house-price-data")
 
-# or get from 'data' folder in repo
+# save data in 'data' folder
+
+# load data into environment
 london_housing <- read.csv("data/kaggle_london_house_price_data.csv")
 
 # tidy the data
