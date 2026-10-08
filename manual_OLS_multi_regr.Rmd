@@ -1,3 +1,17 @@
+---
+title: "Manual OLS for parameter estimation"
+author: "PGB"
+date: "2026-10-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this file I will manually estimate the parameters (or coefficients) of a multiple linear regression, where I will describe the current price of houses (outcome variable) as a function of the postal code, number of bathrooms, bedrooms and living rooms, and floor area in square meters. I will be using a data set available on [Kaggle](https://www.kaggle.com/datasets/jakewright/house-price-data/data). 
+
+```{r}
 # loading MASS library
 library(MASS)
 
@@ -17,8 +31,17 @@ london_housing <- read.csv("data/kaggle_london_house_price_data.csv")
 # remove NA
 london_housing <- na.omit(london_housing)
 
-# remove unwanted variables
-london_housing <- london_housing %>%
+
+```
+
+Firstly, this is a huge dataset and will put a substantial computational burden on the computer, so we select a subset. Then, in order to preapre the data for multiple linear regression, we have to put the output variable into its own vector, while we put the covariables (or input features) into a design matrix. 
+Because we will estimate parameters for a linear model of the form y = b0 + b1x1 + b2x2... we will add a column of value = 1 at the front of our design matrix. That way we ensure that the intercept is retained (i.e. we create a variable x0 for the intercept parameter b0, and set it to 1).
+
+```{r}
+# filter for date and remove unwanted variables to decrease computational burden
+london_housing_short <- london_housing %>%
+  mutate(history_date = as.Date(history_date)) %>%
+  filter(history_date > "2024-06-01") %>%
   select(outcode,
          bathrooms,
          bedrooms,
@@ -27,19 +50,44 @@ london_housing <- london_housing %>%
          saleEstimate_currentPrice
   )
 
-# specify output variable
-y <- london_housing$saleEstimate_currentPrice
+# clean up to decrease memory usage
+rm(london_housing)
+
+# specify output variable and convert to matrix for calculations
+y <- as.matrix(london_housing_short$saleEstimate_currentPrice)
 
 # create feature matrix
-feature_matrix <- london_housing %>%
+feature_matrix <- london_housing_short %>%
   select(-saleEstimate_currentPrice) %>%
   as.matrix()
 
-# because we will estimate parameters for a linear model of the form y = b0 + b1x1 + b2x2...
-# we have to add a column of values to column 1 of our design matrix, to represent a mock covariant
-# for the intercept parameter b0, so that the linear model becomes y = b0x0 + b1x1 + b2x2...
-# we will set x0 = 1 for all features
+# Create x0 variable for intercept
+b0_vector <- rep(1, length(y))
+
+# Add x0 vector to feature matrix, and define as input matrix X
+X <- cbind(b0_vector, feature_matrix)
+
+```
+In the next step we will use the Normal Equation:
+$$
+\hat{\beta} = (X^T X)^{-1} X^T y
+$$
+This provides a closed-form solution to linear regression, allowing for the computation of optimal coefficients in one step. While it uses the simplicity of matrix multiplication, the inversion of the input matrix (X) can become computationally expensive for large datasets, which is why we trimmed the one we're using here. Once we've completed the computation, we'll have a vector of parameters (designated as beta-hat in the equation above), relating to the coefficient by which each variable has to be multiplied to return the output variable.
 
 
+```{r}
+# define a function to calculate the parameters (beta-hat)
+parameters <- function(response, features) {
+  matrix_T_multiply = t(features) %*% features
+  invert_matrix = solve(matrix_T_multiply)
+  param_estim = invert_matrix %*% t(features) %*% response
+  return(round(param_estim, 2))
+}
+
+parameters(y, X)
+
+  
+
+```
 
 
