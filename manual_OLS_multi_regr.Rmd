@@ -128,8 +128,8 @@ print(summary(house_model_lm))
 
 The built-in linear model function returns the same parameters as the manual calculation above.
 
-```{r lm_function_incl_area}
-house_model_incl_area <- lm(saleEstimate_currentPrice ~ outcode + bathrooms + bedrooms + floorAreaSqM + livingRooms, data = london_housing_short)
+```{r lm_function_incl_outcode}
+house_model_incl_outcode <- lm(saleEstimate_currentPrice ~ outcode + bathrooms + bedrooms + floorAreaSqM + livingRooms, data = london_housing_short)
 
 ```
 Let's use this new model to predict the prices of the small flat and the luxury apartment. The data for these properties is as follows:
@@ -148,10 +148,10 @@ new_data <- data.frame(outcode=c("NW11", "W8"),
                        )
 rownames(new_data) <- c("small_flat", "lux_apt")
 
-prediction_incl_area <- predict(house_model_incl_area, newdata = new_data)
-print(prediction_incl_area)
+prediction_incl_outcode <- predict(house_model_incl_outcode, newdata = new_data)
+print(prediction_incl_outcode)
 ```
-Adding in the area code to the model has adjusted the price for the small flat downwards (closer to the asking price). Without this factor, the predicted price was £386,261.20. Including the `outcode` factor drops that to £373,399, which is closer to the asking price of £360,000. The luxury apartment's predicted price has increased by about £800,000, but still hasn't boosted it to reflect the asking price. The previous model predicted an asking price of £2,813,227, and adding the `outcode` factor raised that to £3,630,641 but it is still far from the asking price of £23,500,000, which shows the limitation of models like this. It is possible that the dataset contains much more data about 1 bed, 1 bath flats than large, luxurious apartments, and so the model might be somewhat biased towards smaller/cheaper properties. 
+Adding in the post code to the model has adjusted the price for the small flat downwards (closer to the asking price). Without this factor, the predicted price was £386,261.20. Including the `outcode` factor drops that to £373,399, which is closer to the asking price of £360,000. The luxury apartment's predicted price has increased by about £800,000, but still hasn't boosted it to reflect the asking price. The previous model predicted an asking price of £2,813,227, and adding the `outcode` factor raised that to £3,630,641 but it is still far from the asking price of £23,500,000, which shows the limitation of models like this. It is possible that the dataset contains much more data about 1 bed, 1 bath flats than large, luxurious apartments, and so the model might be somewhat biased towards smaller/cheaper properties. 
 
 
 
