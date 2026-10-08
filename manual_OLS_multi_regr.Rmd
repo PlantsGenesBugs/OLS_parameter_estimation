@@ -128,10 +128,9 @@ print(summary(house_model_lm))
 
 The built-in linear model function returns the same parameters as the manual calculation above.
 
-```{r}
+```{r lm_function_incl_area}
 house_model_incl_area <- lm(saleEstimate_currentPrice ~ outcode + bathrooms + bedrooms + floorAreaSqM + livingRooms, data = london_housing_short)
 
-print(summary(house_model_incl_area))
 ```
 Let's use this new model to predict the prices of the small flat and the luxury apartment. The data for these properties is as follows:
 
