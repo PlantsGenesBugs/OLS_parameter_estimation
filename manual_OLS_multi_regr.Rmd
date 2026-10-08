@@ -2,11 +2,12 @@
 title: "Manual OLS for parameter estimation"
 author: "PGB"
 date: "2026-10-07"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+install.packages("rmarkdown")
 ```
 
 In this file I will manually estimate the parameters (or coefficients) of a multiple linear regression, where I will describe the current price of houses (outcome variable) as a function of the postal code, number of bathrooms, bedrooms and living rooms, and floor area in square meters. I will be using a data set available on [Kaggle](https://www.kaggle.com/datasets/jakewright/house-price-data/data). 
