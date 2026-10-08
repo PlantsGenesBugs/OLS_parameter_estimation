@@ -205,7 +205,7 @@ The built-in linear model function returns the same parameters as the
 manual calculation above.
 
 ``` r
-house_model_incl_area <- lm(saleEstimate_currentPrice ~ outcode + bathrooms + bedrooms + floorAreaSqM + livingRooms, data = london_housing_short)
+house_model_incl_outcode <- lm(saleEstimate_currentPrice ~ outcode + bathrooms + bedrooms + floorAreaSqM + livingRooms, data = london_housing_short)
 ```
 
 Let’s use this new model to predict the prices of the small flat and the
@@ -225,14 +225,14 @@ new_data <- data.frame(outcode=c("NW11", "W8"),
                        )
 rownames(new_data) <- c("small_flat", "lux_apt")
 
-prediction_incl_area <- predict(house_model_incl_area, newdata = new_data)
-print(prediction_incl_area)
+prediction_incl_outcode <- predict(house_model_incl_outcode, newdata = new_data)
+print(prediction_incl_outcode)
 ```
 
     ## small_flat    lux_apt 
     ##     373399    3630641
 
-Adding in the area code to the model has adjusted the price for the
+Adding in the post code to the model has adjusted the price for the
 small flat downwards (closer to the asking price). Without this factor,
 the predicted price was £386,261.20. Including the `outcode` factor
 drops that to £373,399, which is closer to the asking price of £360,000.
